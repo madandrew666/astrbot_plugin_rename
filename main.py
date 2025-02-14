@@ -18,7 +18,7 @@ class RenamePlugin(Star):
         """    """
         qq = str(event.get_sender_id())
         if qq in self.id_name_list.keys():
-            event.message_obj.sender.user_id=self.id_name_list[qq]
+            event.message_obj.sender.nickname=self.id_name_list[qq]
             return True
         return False
 
@@ -35,6 +35,7 @@ class RenamePlugin(Star):
         """        """
         sender_id = str(event.get_sender_id())
         newname = event.message_obj.message_str
+        newname = newname.split(" ")[-1]
         if not newname:
             yield event.plain_result("请在 /rename 后输入新名称")
             return
@@ -43,17 +44,25 @@ class RenamePlugin(Star):
         self.persist()
         yield event.plain_result(f"已更新{sender_id}的昵称为{newname}")
 
-
-    @filter.permission_type(filter.PermissionType.ADMIN)
+    @filter.command("getname")
+    async def get_name(self,event: AstrMessageEvent):
+        sender_id = str(event.get_sender_id())
+        sender_name = ""
+        if not sender_id in self.id_name_list.keys():
+            sender_name = str(event.get_sender_name())
+        else:
+            sender_name = self.id_name_list[sender_id]
+        yield event.plain_result(f"您的id是{sender_id}，您的名称是{sender_name}")
     @filter.command("rename-help")
-    async def ban_help(self, event: AstrMessageEvent):
+    async def rename_help(self, event: AstrMessageEvent):
         """
         管理员专用命令：显示该插件所有命令列表及功能说明。
-        格式：/ban-help
+        格式：/rename-help
         """
         help_text = (
             "【rename_plugin 插件命令帮助】\n"
             "1. /rename xxx：将此账号的昵称永久更改为xxx\n"
+            "2. /getname: 获得当前记载的昵称"
         )
         yield event.plain_result(help_text)
 
