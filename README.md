@@ -1,8 +1,7 @@
-# helloworld
+# astr_plugin_rename
 
-AstrBot 插件模板
+AstrBot 重命名插件
 
-A template plugin for AstrBot plugin feature
 
 # 支持
 
